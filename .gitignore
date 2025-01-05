@@ -363,6 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 *.pyproj
-*.vxcproj
+*.vcxproj
 *.vcxproj.filters
 *.sln
