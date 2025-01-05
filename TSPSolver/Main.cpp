@@ -18,6 +18,7 @@ int main() {
 			problem.constructProblem(fileName);
 			problem.printCities();
 			GeneticAlgorithm ga = GeneticAlgorithm(problem);
+			cout << "yo" << endl;
 			float fittest = ga.startGA();
 
 			fileName.erase(fileName.size() - 4);
