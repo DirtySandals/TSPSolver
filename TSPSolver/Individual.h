@@ -5,6 +5,7 @@
 
 #include "City.h"
 
+#include <string>
 #include <vector>
 
 class Individual {
@@ -25,6 +26,8 @@ public:
 	size_t index(City* city);
 	static float calculateFitness(std::vector<City>& solution, int dimension);
 	void operator[](size_t index);
+	std::string toString();
+	friend std::ostream& operator<<(std::ostream& os, const Individual& ind);
 };
 
 #endif // !INDIVIDUAL_H

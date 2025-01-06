@@ -12,11 +12,11 @@ class Population {
 public:
 	std::vector<Individual> population;
 	std::vector<City> problem;
-	const int population_size = 50;
+	int populationSize;
 	int dimension;
 	float fittestFitness;
 	Population();
-	Population(TSPProblem tspProblem, int dimension);
+	Population(std::vector<City> cities, int populationSize, int dimension);
 	~Population();
 	void randomisePopulation();
 	void calculateAllFitness();

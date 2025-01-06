@@ -64,12 +64,11 @@ float Individual::calculateFitness() {
 	}
 	totalDistance += calculateDistance(route[0], route[dimension - 1]);
 	fitness = totalDistance;
+
 	return fitness;
 }
 
 size_t Individual::index(City* city) {
-	//cout << dimension << endl;
-	//cout << route.size() << endl;
 	for (int i = 0; i < dimension; i++) {
 		if (route[i].index == city->index) return i;
 	}
@@ -103,4 +102,33 @@ float Individual::calculateFitness(std::vector<City>& solution, int dimension) {
 	cout << endl;
 	*/
 	return totalDistance;
+}
+
+std::string Individual::toString() {
+	string output = "Route:\n{";
+	for (int i = 0; i < dimension; i++) {
+		output += to_string(route[i].index);
+		if (i != dimension - 1) {
+			output += ", ";
+		}
+	}
+
+	output += "}";
+
+	return output;
+}
+
+std::ostream& operator<<(std::ostream& os, const Individual& ind) {
+	string output = "Route:\n{";
+	for (int i = 0; i < ind.dimension; i++) {
+		output += to_string(ind.route[i].index);
+		if (i != ind.dimension - 1) {
+			output += ", ";
+		}
+	}
+
+	output += "}";
+
+	os << output << endl;
+	return os;
 }

@@ -18,7 +18,7 @@ class GeneticAlgorithm {
 		float pc = 0.f;
 		float pm = 0.f;
 		Population* population = nullptr;
-		int population_size;
+		int populationSize;
 		int dimension;
 		std::vector<City> problem;
 		std::vector<City> currSol;
@@ -37,7 +37,7 @@ class GeneticAlgorithm {
 	public:
 		GeneticAlgorithm();
 		~GeneticAlgorithm();
-		GeneticAlgorithm(TSPProblem& tspProblem, MutationOperator* mutator, CrossoverOperator* crossover, SelectionOperator* selector);
+		GeneticAlgorithm(TSPProblem& tspProblem, int populationSize, MutationOperator* mutator, CrossoverOperator* crossover, SelectionOperator* selector);
 		float startGA(int maxGenerations=10000);
 };
 

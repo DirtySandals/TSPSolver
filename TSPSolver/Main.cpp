@@ -2,6 +2,7 @@
 #include "IGA.h"
 #include "TSPProblem.h"
 #include "GeneticAlgorithm.h"
+#include "SelectionOperators.h"
 #include <vector>
 #include <string>
 #include <filesystem>
@@ -10,6 +11,11 @@
 using namespace std;
 
 int main() {
+	int populationSize = 50;
+	MutationOperator* mutator = new SwapMutation();
+	CrossoverOperator* crossover = new PMXCrossover(populationSize);
+	SelectionOperator* selector = new FitnessProportionalSelection(populationSize);
+
 	vector<string> fileNames = { "a280.txt", "pcb442.txt", "pr2392.txt", "usa13509.txt" }; //"eil51.txt" };//, "st70.txt", "eil76.txt", "kroA100.txt", "kroC100.txt", "eil101.txt", "lin105.txt", "a280.txt", "pcb442.txt", "pr2392.txt", "usa13509.txt"};
 	for (int i = 0; i < 30; i++) {
 		for (string fileName : fileNames) {
@@ -17,7 +23,7 @@ int main() {
 			TSPProblem problem;
 			problem.constructProblem(fileName);
 			problem.printCities();
-			GeneticAlgorithm ga = GeneticAlgorithm(problem);
+			GeneticAlgorithm ga = GeneticAlgorithm(problem, populationSize, mutator, crossover, selector);
 			float fittest = ga.startGA();
 
 			fileName.erase(fileName.size() - 4);
@@ -34,7 +40,7 @@ int main() {
 
 	while (command != "quit") {
 		getline(cin, command);
-		iga.processCommand();
+		iga.processCommand(command);
 	}
 
 	return 0;

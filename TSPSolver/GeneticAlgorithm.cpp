@@ -21,14 +21,14 @@ GeneticAlgorithm::~GeneticAlgorithm() {
 	delete[] selectedPopulation;
 }
 
-GeneticAlgorithm::GeneticAlgorithm(TSPProblem& tspProblem, MutationOperator* mutator, CrossoverOperator* crossover, SelectionOperator* selector) : problem(tspProblem.problem) {
-	population_size = 50;
+GeneticAlgorithm::GeneticAlgorithm(TSPProblem& tspProblem, int populationSize, MutationOperator* mutator, CrossoverOperator* crossover, SelectionOperator* selector) : problem(tspProblem.problem) {
+	populationSize = 50;
 	dimension = tspProblem.dimension;
-	population = new Population(tspProblem, dimension);
+	population = new Population(tspProblem.problem, populationSize, dimension);
 	currSol.reserve(dimension);
 	order.reserve(dimension);
 
-	selectedPopulation = new Individual[population_size];
+	selectedPopulation = new Individual[populationSize];
 
 	this->mutator = mutator;
 	this->crossover = crossover;
@@ -58,7 +58,7 @@ float GeneticAlgorithm::startGA(int maxGenerations) {
 }
 
 void GeneticAlgorithm::initProbabilities() {
-	float inversePopulationSize = 1.f / (float) population_size;
+	float inversePopulationSize = 1.f / (float) populationSize;
 	float inverseChromosomeLength = 1.f / (float)population->dimension;
 
 	this->pc = (0.6f + 0.9f) / 2.f;
@@ -68,14 +68,14 @@ void GeneticAlgorithm::initProbabilities() {
 void GeneticAlgorithm::runGeneration() {
 	population->calculateAllFitness();
 
-	selector->select(&(*population), selectedPopulation);
+	selector->select(*population, selectedPopulation);
 
 	random_device rd;
 	default_random_engine eng(rd());
 	uniform_real_distribution<float> distrFloat(0.0, 1.0);
 
-	for (int i = 0; i < population_size; i += 2) {
-		if (i + 1 == population_size) {
+	for (int i = 0; i < populationSize; i += 2) {
+		if (i + 1 == populationSize) {
 			population->population[i] = selectedPopulation[i];
 		}
 		Individual first = selectedPopulation[i];

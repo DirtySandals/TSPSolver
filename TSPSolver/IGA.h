@@ -2,6 +2,8 @@
 #ifndef IGA_H
 #define IGA_H
 
+#include <string>
+
 class IGA {
 	private:
 

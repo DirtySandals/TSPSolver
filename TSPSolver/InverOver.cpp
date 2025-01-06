@@ -28,8 +28,8 @@ void InverOver::runGeneration() {
 	default_random_engine eng(rd());
 	uniform_real_distribution<float> distrFloat(0.0, 1.0);
 	uniform_int_distribution<int> distrDimension(0, dimension - 1);
-	uniform_int_distribution<int> distrPop(0, population_size - 1);
-	for (int k = 0; k < population_size; k++) {
+	uniform_int_distribution<int> distrPop(0, populationSize - 1);
+	for (int k = 0; k < populationSize; k++) {
 		for (int i = 0; i < dimension; i++) {
 			currSol[i] = population->population[k].route[i];
 		}

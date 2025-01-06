@@ -11,27 +11,27 @@ Population::~Population() {
 
 }
 
-Population::Population(TSPProblem tspProblem, int dimension) : dimension(dimension), problem(tspProblem.problem) {
-	for (int i = 0; i < population_size; i++) {
-		population.push_back(Individual(dimension, tspProblem.problem));
+Population::Population(vector<City> cities, int populationSize, int dimension) : populationSize(populationSize), dimension(dimension), problem(cities) {
+	for (int i = 0; i < populationSize; i++) {
+		population.push_back(Individual(dimension, cities));
 	}
 	randomisePopulation();
+	calculateAllFitness();
 }
 
 void Population::randomisePopulation() {
-	for (int i = 0; i < population_size; i++) {
+	for (int i = 0; i < populationSize; i++) {
 		population[i].randomize();
 	}
 	calculateAllFitness();
 }
 
 void Population::calculateAllFitness() {
-	for (int i = 0; i < population_size; i++) {
+	for (int i = 0; i < populationSize; i++) {
 		if (population[i].fitness == -1) population[i].calculateFitness();
 		if (i == 0) fittestFitness = population[i].fitness;
 		fittestFitness = min(population[i].fitness, fittestFitness);
 	}
-	// stats
 }
 
 size_t Population::size() {
