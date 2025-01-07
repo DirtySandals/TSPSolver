@@ -11,6 +11,11 @@
 using namespace std;
 
 InverOver::InverOver() {
+
+}
+
+InverOver::InverOver(TSPProblem& tspProblem, int populationSize) : GeneticAlgorithm(tspProblem, populationSize, nullptr, nullptr, nullptr) {
+
 }
 
 void InverOver::invert(size_t indexA, size_t indexB, std::vector<City>& solution) {

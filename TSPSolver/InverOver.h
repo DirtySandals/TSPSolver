@@ -10,6 +10,7 @@ class InverOver : public GeneticAlgorithm {
 		void runGeneration();
 	public:
 		InverOver();
+		InverOver(TSPProblem& tspProblem, int populationSize);
 };
 
 #endif // !INVEROVER_H

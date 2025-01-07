@@ -26,7 +26,7 @@ namespace TSPSolverTests {
 	Individual initIndividual(int dimension) {
 		vector<City> cities = initCities(dimension);
 
-		Individual ind = Individual(dimension, cities);
+		Individual ind = Individual(cities);
 
 		return ind;
 	}
@@ -34,7 +34,7 @@ namespace TSPSolverTests {
 	Population initPopulation(int populationSize, int dimension) {
 		vector<City> cities = initCities(dimension);
 
-		Population population = Population(cities, populationSize, dimension);
+		Population population = Population(cities, populationSize);
 
 		return population;
 	}

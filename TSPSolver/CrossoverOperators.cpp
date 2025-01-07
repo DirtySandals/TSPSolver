@@ -22,7 +22,7 @@ CrossoverOperator::CrossoverOperator(int dimension) {
 		cities.push_back(City(1, 1, 1));
 	}
 
-	child = Individual(dimension, cities);
+	child = Individual(cities);
 }
 
 

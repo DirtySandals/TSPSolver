@@ -12,6 +12,12 @@
 using namespace RandomUtil;
 using namespace std;
 
+void SelectionOperator::copyPopulation(Population& population, Individual parents[]) {
+	for (int i = 0; i < population.populationSize; i++) {
+		parents[i] = population.population[i];
+	}
+}
+
 FitnessProportionalSelection::FitnessProportionalSelection(int populationSize) {
 	for (int i = 0; i < populationSize; i++) {
 		fitnesses.push_back(0);
@@ -19,6 +25,7 @@ FitnessProportionalSelection::FitnessProportionalSelection(int populationSize) {
 }
 
 void FitnessProportionalSelection::select(Population& population, Individual selectedIndividuals[]) {
+	copyPopulation(population, selectedIndividuals);
 	for (int i = 0; i < population.populationSize; i++) {
 		fitnesses[i] = 1.f / population.population[i].fitness;
 	}
@@ -36,12 +43,13 @@ TournamentSelection::~TournamentSelection() {
 }
 
 void TournamentSelection::select(Population& population, Individual selectedIndividuals[]) {
-	if (population.dimension < tournamentSize) {
-		tournamentSize = population.dimension;
+	copyPopulation(population, selectedIndividuals);
+	if (population.populationSize < tournamentSize) {
+		tournamentSize = population.populationSize;
 	}
 
 	for (int i = 0; i < population.populationSize; i++) {
-		sample(population.dimension, samples, tournamentSize);
+		sample(population.populationSize, samples, tournamentSize);
 
 		int minIndex = samples[0];
 		int minFitness = population.population[samples[0]].fitness;
@@ -51,6 +59,7 @@ void TournamentSelection::select(Population& population, Individual selectedIndi
 				minFitness = population.population[samples[i]].fitness;
 			}
 		}
+
 		selectedIndividuals[i] = move(population.population[minIndex]);
 	}
 }
@@ -58,6 +67,7 @@ void TournamentSelection::select(Population& population, Individual selectedIndi
 void ElitismSelection::quickSort(Individual selectedIndividuals[], int start, int end) {
 	if (start >= end)
 		return;
+
 	int pivotSpot = end - 1;
 	Individual pivot = selectedIndividuals[pivotSpot];
 	int pivotIndex = start;
@@ -77,5 +87,8 @@ void ElitismSelection::quickSort(Individual selectedIndividuals[], int start, in
 }
 
 void ElitismSelection::select(Population& population, Individual selectedIndividuals[]) {
-	quickSort(selectedIndividuals, 0, population.dimension);
+	copyPopulation(population, selectedIndividuals);
+	/*cout << selectedIndividuals[20].toString() << endl;*/
+	quickSort(selectedIndividuals, 0, population.populationSize);
+	/*cout << selectedIndividuals[20].toString() << endl;*/
 }

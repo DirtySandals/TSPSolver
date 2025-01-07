@@ -9,12 +9,14 @@
 #include <string>
 
 class TSPProblem {
+private:
+	void readCoordinates(std::vector<std::string>& lines, int startIndex);
 public:
 	std::vector<City> problem;
-	int dimension;
+	int dimension = 0;
 	TSPProblem();
-	void constructProblem(std::string file);
-	void readCoordinates(std::vector<std::string>& lines, int startIndex);
+	void parseFile(std::string file);
+	void parseInstance(std::vector<std::string>& lines);
 	void printCities();
 };
 

@@ -8,6 +8,8 @@ class Population;
 class Individual;
 
 class SelectionOperator {
+	protected:
+		void copyPopulation(Population& population, Individual parents[]);
 	public:
 		virtual void select(Population& population, Individual selectedIndividuals[]) = 0;
 };

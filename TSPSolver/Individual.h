@@ -17,7 +17,7 @@ public:
 	int dimension;
 	float fitness = -1;
 	Individual();
-	Individual(int dimension, std::vector<City> problem);
+	Individual(std::vector<City> problem);
 	~Individual();
 	void randomize();
 	void loadRoute(City problem[]);
@@ -27,6 +27,7 @@ public:
 	static float calculateFitness(std::vector<City>& solution, int dimension);
 	void operator[](size_t index);
 	std::string toString();
+	void operator=(const Individual& other);
 	friend std::ostream& operator<<(std::ostream& os, const Individual& ind);
 };
 

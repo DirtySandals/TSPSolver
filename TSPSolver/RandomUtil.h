@@ -24,7 +24,7 @@ namespace RandomUtil {
 		samples[0] = getRandomInt(0, dimension - 1);
 		samples[1] = samples[0];
 
-		while (samples[1] != samples[0]) {
+		while (samples[1] == samples[0]) {
 			samples[1] = getRandomInt(0, dimension - 1);
 		}
 	}

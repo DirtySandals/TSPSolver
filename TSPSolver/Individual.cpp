@@ -1,8 +1,10 @@
 #include "Individual.h"
-#include <iostream>
-#include <random> 
+
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+#include <limits>
+#include <random> 
 #include <unordered_map>
 
 using namespace std;
@@ -16,9 +18,12 @@ Individual::Individual() {
 
 }
 
-Individual::Individual(int dimension, std::vector<City> problem) : dimension(dimension) {
+Individual::Individual(std::vector<City> problem) {
+	fitness = numeric_limits<float>::max();
+	dimension = problem.size();
 	route.reserve(dimension);
 	routeMap.reserve(dimension);
+
 	for (int i = 0; i < dimension; i++) routeMap.push_back(0);
 	for (int i = 0; i < dimension; i++) {
 		route.push_back(problem[i]);
@@ -28,6 +33,7 @@ Individual::Individual(int dimension, std::vector<City> problem) : dimension(dim
 		}
 		routeMap[problem[i].index - 1] = i;
 	}
+
 	randomize();
 }
 
@@ -40,9 +46,8 @@ void Individual::randomize() {
 	}
 }
 
-
-
 Individual::~Individual() {
+
 }
 
 void Individual::loadRoute(City problem[]) {
@@ -116,6 +121,13 @@ std::string Individual::toString() {
 	output += "}";
 
 	return output;
+}
+
+void Individual::operator=(const Individual& other) {
+	this->route = other.route;
+	this->routeMap = other.routeMap;
+	this->dimension = other.dimension;
+	this->fitness = other.fitness;
 }
 
 std::ostream& operator<<(std::ostream& os, const Individual& ind) {

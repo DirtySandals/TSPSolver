@@ -11,15 +11,22 @@
 #include "SelectionOperators.h"
 #include "TSPProblem.h"
 
+#include <atomic>
+#include <condition_variable>
 #include <limits>
+#include <mutex>
 
 class GeneticAlgorithm {
 	protected:
+		int bestFitnessIndex = 0;
+		StatTracker stats;
+
 		float pc = 0.f;
 		float pm = 0.f;
 		Population* population = nullptr;
 		int populationSize;
 		int dimension;
+
 		std::vector<City> problem;
 		std::vector<City> currSol;
 		std::vector<size_t> order;
@@ -30,15 +37,20 @@ class GeneticAlgorithm {
 
 		Individual* selectedPopulation = nullptr;
 
-		float fittest = std::numeric_limits<float>::max();
+		std::atomic<bool> cancelAlgorithm;
+		std::mutex algMutex;
+		std::condition_variable algStop;
+		static const int generationTolerance = 1000;
 
 		void initProbabilities();
+		void runAlgorithm(int maxGenerations);
 		virtual void runGeneration();
 	public:
 		GeneticAlgorithm();
 		~GeneticAlgorithm();
 		GeneticAlgorithm(TSPProblem& tspProblem, int populationSize, MutationOperator* mutator, CrossoverOperator* crossover, SelectionOperator* selector);
-		float startGA(int maxGenerations=10000);
+		void startGA(int maxGenerations=20000);
+		void stop();
 };
 
 #endif // !GENETICALGORITHM_H
