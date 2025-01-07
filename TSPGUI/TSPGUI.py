@@ -1,42 +1,75 @@
 import pygame
 import sys
+from TSPProcess import TSPProcess
 
 from GUI import GUI
 import GUI
 
-if __name__ == "__main__":
-    gui = GUI.GUI()
-    pygame.init()
+process = TSPProcess()
 
-    screen = pygame.display.set_mode((GUI.WIDTH, GUI.HEIGHT))
-    pygame.display.set_caption("TSPGUI")
-    
-    # Colors (RGB format)
-    WHITE = (255, 255, 255)
-    RED = (255, 0, 0)
-        # Clock to control frame rate
-    clock = pygame.time.Clock()
+pygame.init()
 
-    # Rectangle properties
-    rect_x, rect_y = 100, 100
-    rect_width, rect_height = 50, 50
-    rect_speed = 5
+WIDTH, HEIGHT = 800, 600
 
-    # Game loop
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("TSP")
+
+BACKGROUND = (0, 0, 0)
+
+clock = pygame.time.Clock()
+
+def display_tsp():
     while True:
-        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pass
+            
+        clock.tick()
+        
+        pygame.display.update()
 
-        # Update game state
-        keys = pygame.key.get_pressed()  # Detect key presses
+def make_instance():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pass
+            
+        clock.tick()
+        
+        pygame.display.update()
 
-        gui.render(pygame, screen, keys)
+def select_instance():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pass
+            
+        clock.tick()
+        
+        pygame.display.update()
 
-        # Update display
-        pygame.display.flip()
+def main_menu():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pass
+            
+        clock.tick()
+        
+        pygame.display.update()
+        
 
-        # Cap frame rate
-        clock.tick(60)
+if __name__ == "__main__":
+    main_menu()
