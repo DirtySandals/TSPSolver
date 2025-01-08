@@ -1,4 +1,5 @@
 from audioop import cross
+from TSPPathFinder import exeFinder
 import select
 import subprocess
 import threading
@@ -8,7 +9,7 @@ class TSPProcess:
         self.process = None
         self.listener_thread = None
         self.best_route = []
-        self.exe_path = "./SolverApplication/TSPSolver.exe"
+        self.exe_path = exeFinder()
         
         self.init_process()
     
@@ -21,18 +22,19 @@ class TSPProcess:
             text=True
         )
         
-        self.listener_thread = threading.Thread(target=self.listen_to_stdout, arg=(self,))
+        self.listener_thread = threading.Thread(target=self.listen_to_stdout)
         self.listener_thread.start()
         
     def __del__(self):
-        self.listener_thread.join()
-        self.process.terminate()
+        if self.process is not None:
+            self.listener_thread.join()
+            self.process.terminate()
     
     def parse_route(self, route):
         route = route.strip()
         route = route.split()
         
-        if route is not "bestroute:":
+        if route != "bestroute:":
             return
         
         del route[0]
@@ -58,7 +60,7 @@ class TSPProcess:
                 self.parse_route(output.strip())
                 
     def write_to_process(self, message):
-        self.process.write(message)
+        self.process.stdin.write(f"{message}\r\n")
         self.process.stdin.flush()
     
     def stop(self):
