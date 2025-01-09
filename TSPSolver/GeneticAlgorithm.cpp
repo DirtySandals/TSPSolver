@@ -44,10 +44,12 @@ GeneticAlgorithm::GeneticAlgorithm(TSPProblem& tspProblem, int populationSize, M
 	initProbabilities();
 
 	cancelAlgorithm.store(false);
+	runningAlg.store(false);
 }
 
 void GeneticAlgorithm::startGA(int maxGenerations) {
 	cancelAlgorithm.store(false);
+	runningAlg.store(true);
 
 	unique_lock<mutex> lock(algMutex);
 
@@ -56,6 +58,7 @@ void GeneticAlgorithm::startGA(int maxGenerations) {
 	algStop.wait(lock, [this] { return this->cancelAlgorithm.load(); });
 
 	algThread.join();
+	runningAlg.store(false);
 }
 
 void GeneticAlgorithm::stop() {

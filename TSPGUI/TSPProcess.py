@@ -1,8 +1,20 @@
 from audioop import cross
+from pickle import INST
 from TSPPathFinder import exeFinder
 import select
 import subprocess
 import threading
+import os
+
+def points_to_instance(points):
+    instance = ""
+    
+    for point in points:
+        instance += str(point[0]) + "," + str(point[1]) + " "
+        
+    instance += "EOF"
+    
+    return instance
 
 class TSPProcess:
     def __init__(self):
@@ -14,12 +26,14 @@ class TSPProcess:
         self.init_process()
     
     def init_process(self):
+        exe_directory = os.path.join(os.getcwd(), "SolverApplication")
         self.process = subprocess.Popen(
             [self.exe_path], 
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True
+            text=True,
+            cwd=exe_directory
         )
         
         self.listener_thread = threading.Thread(target=self.listen_to_stdout)
@@ -34,7 +48,7 @@ class TSPProcess:
         route = route.strip()
         route = route.split()
         
-        if route != "bestroute:":
+        if route[0] != "bestroute:":
             return
         
         del route[0]
@@ -60,6 +74,7 @@ class TSPProcess:
                 self.parse_route(output.strip())
                 
     def write_to_process(self, message):
+        print(message)
         self.process.stdin.write(f"{message}\r\n")
         self.process.stdin.flush()
     
@@ -71,7 +86,9 @@ class TSPProcess:
         self.write_to_process(message)
         
     def load_instance(self, instance):
-        message = f"load instance {instance}"
+        formatted_instance = points_to_instance(instance)
+        print(formatted_instance)
+        message = f"load instance {formatted_instance}"
         self.write_to_process(message)
         
     def start_ga(self, inverover=False, max_generations=None, population_size=None, mutator=None, crossover=None, selector=None):
@@ -95,6 +112,7 @@ class TSPProcess:
             message += f"crossover {crossover} "
             
         if selector:
-            message += f"selection {selector} "
-            
+            message += f"selection {selector} "   
+
         self.write_to_process(message)
+        

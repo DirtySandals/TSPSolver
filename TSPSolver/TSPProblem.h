@@ -17,6 +17,7 @@ public:
 	TSPProblem();
 	void parseFile(std::string file);
 	void parseInstance(std::vector<std::string>& lines);
+	void parseCustomInstance(std::vector<std::string>& lines);
 	void printCities();
 };
 

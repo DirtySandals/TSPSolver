@@ -26,18 +26,19 @@ class IGA {
 		int getLabelledValueInt(std::string text, std::string label, const std::vector<std::string> allLabels);
 		std::string getLabelledValue(std::string text, std::string label, const std::vector<std::string> allLabels);
 
-		void selectMutation(MutationOperator* mutator, std::string name);
-		void selectCrossover(CrossoverOperator* crossover, std::string name, int dimension);
-		void selectSelection(SelectionOperator* selector, std::string name, int populationSize);
-	public:
-		IGA();
-		~IGA();
-		void processCommand(std::string command);
+		MutationOperator* selectMutation(std::string name);
+		CrossoverOperator* selectCrossover(std::string name, int dimension);
+		SelectionOperator* selectSelection(std::string name, int populationSize);
+
 		void processLoad(std::string command);
 		void processStart(std::string command);
 		void stop();
 		void quit();
 		void help();
+	public:
+		IGA();
+		~IGA();
+		void processCommand(std::string command);
 };
 
 #endif // !IGA_H

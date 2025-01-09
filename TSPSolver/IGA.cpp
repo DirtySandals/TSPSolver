@@ -23,7 +23,9 @@ IGA::IGA() {
 	cout << "type: 'help' for help" << endl;
 }
 
-void IGA::selectMutation(MutationOperator* mutator, std::string name) {
+MutationOperator* IGA::selectMutation(std::string name) {
+	MutationOperator* mutator = nullptr;
+
 	name = toLower(name);
 
 	if (name == "insert") {
@@ -35,11 +37,15 @@ void IGA::selectMutation(MutationOperator* mutator, std::string name) {
 	} else if (name == "scramble") {
 		mutator = new ScrambleMutation();
 	} else {
-		throw new invalid_argument(name + " is not a valid mutation operator");
+		throw invalid_argument(name + " is not a valid mutation operator");
 	}
+
+	return mutator;
 }
 
-void IGA::selectCrossover(CrossoverOperator* crossover, std::string name, int dimension) {
+CrossoverOperator* IGA::selectCrossover(std::string name, int dimension) {
+	CrossoverOperator* crossover = nullptr;
+
 	name = toLower(name);
 
 	if (name == "order") {
@@ -49,11 +55,15 @@ void IGA::selectCrossover(CrossoverOperator* crossover, std::string name, int di
 	} else if (name == "cycle") {
 		crossover = new CycleCrossover(dimension);
 	} else {
-		throw new invalid_argument(name + " is not a valid crossover operator");
+		throw invalid_argument(name + " is not a valid crossover operator");
 	}
+
+	return crossover;
 }
 
-void IGA::selectSelection(SelectionOperator* selector, std::string name, int populationSize) {
+SelectionOperator* IGA::selectSelection(std::string name, int populationSize) {
+	SelectionOperator* selector = nullptr;
+
 	name = toLower(name);
 
 	if (name == "fitness") {
@@ -63,8 +73,10 @@ void IGA::selectSelection(SelectionOperator* selector, std::string name, int pop
 	} else if (name == "elitism") {
 		selector = new ElitismSelection();
 	} else {
-		throw new invalid_argument(name + " is not a valid selection operator");
+		throw invalid_argument(name + " is not a valid selection operator");
 	}
+
+	return selector;
 }
 
 IGA::~IGA() {
@@ -94,35 +106,49 @@ void IGA::processCommand(string command) {
 }
 
 void IGA::processLoad(std::string command) {
+	if (ga != nullptr && ga->runningAlg.load()) {
+		throw runtime_error("genetic algorithm still running...");
+	}
+
 	if (contains(command, "file")) {
+		cout << "loading file" << endl;
 		string fileName = getLabelledValue(command, "file", loadLabels);
-		fileName += ".txt";
+		fileName = "./" + fileName + ".txt";
 
 		tspProblem->parseFile(fileName);
-
+		cout << "loaded" << endl;
 		delete ga;
 		ga = nullptr;
 	} else if (contains(command, "instance")) {
+		cout << "loading instance" << endl;
 		string instance = getLabelledValue(command, "instance", loadLabels);
 
-		vector<string> lines = split(instance, '\n');
+		instance = trim(instance);
 
-		tspProblem->parseInstance(lines);
+		vector<string> lines = splitString(instance);
 
+		tspProblem->parseCustomInstance(lines);
+		cout << "loaded" << endl;
 		delete ga;
 		ga = nullptr;
 	}
 }
 
 void IGA::processStart(std::string command) {
+	cout << 1 << endl;
+	if (ga != nullptr && ga->runningAlg.load()) {
+		throw runtime_error("genetic algorithm still running...");
+	}
+	cout << 2 << endl;
 	if (gaThread.joinable()) {
-		throw new runtime_error("genetic algorithm still running...");
+		gaThread.join();
+		delete ga;
 	}
-
+	cout << 3 << endl;
 	if (tspProblem->dimension == 0) {
-		throw new invalid_argument("problem has not been loaded");
+		throw invalid_argument("problem has not been loaded");
 	}
-
+	cout << 4 << endl;
 	int maxGenerations = 20000;
 	int populationSize = 50;
 
@@ -134,49 +160,50 @@ void IGA::processStart(std::string command) {
 		int inputMaxGens = getLabelledValueInt(command, "maxgenerations", startLabels);
 
 		if (inputMaxGens < 1000) {
-			throw new out_of_range("maxgenerations must be greater than 1000");
+			throw out_of_range("maxgenerations must be greater than 1000");
 		}
 
 		maxGenerations = inputMaxGens;
 	}
-
+	cout << 5 << endl;
 	if (contains(command, "populationsize")) {
-		int inputPopSize = getLabelledValueInt(command, "populationSize", startLabels);
+		int inputPopSize = getLabelledValueInt(command, "populationsize", startLabels);
 
 		if (inputPopSize <= 0 || inputPopSize >= 100000) {
-			throw new out_of_range("populationsize must be greater than 1 and less than 100,000");
+			throw out_of_range("populationsize must be greater than 1 and less than 100,000");
 		}
 
 		populationSize = inputPopSize;
 	}
-
+	cout << 6 << endl;
 	if (contains(command, "inverover")) {
 		ga = new InverOver(*tspProblem, populationSize);
 		gaThread = thread(&GeneticAlgorithm::startGA, ga, maxGenerations);
 		return;
 	}
-
+	cout << 7 << endl;
 	if (contains(command, "mutation")) {
 		string mutationInput = getLabelledValue(command, "mutation", startLabels);
-		selectMutation(mutator, mutationInput);
+		mutator = selectMutation(mutationInput);
 	} else {
 		mutator = new InversionMutation();
 	}
-
+	cout << 8 << endl;
 	if (contains(command, "crossover")) {
 		string crossoverInput = getLabelledValue(command, "crossover", startLabels);
-		selectCrossover(crossover, crossoverInput, tspProblem->dimension);
+		crossover = selectCrossover(crossoverInput, tspProblem->dimension);
 	} else {
 		crossover = new PMXCrossover(tspProblem->dimension);
 	}
-
+	cout << 9 << endl;
 	if (contains(command, "selection")) {
 		string selectionInput = getLabelledValue(command, "selection", startLabels);
-		selectSelection(selector, selectionInput, populationSize);
+		selector = selectSelection(selectionInput, populationSize);
 	} else {
 		selector = new TournamentSelection(tournamentSize);
 	}
 
+	cout << "started" << endl;
 	ga = new GeneticAlgorithm(*tspProblem, populationSize, mutator, crossover, selector);
 	gaThread = thread(&GeneticAlgorithm::startGA, ga, maxGenerations);
 }
@@ -197,7 +224,6 @@ void IGA::stop() {
 
 void IGA::quit() {
 	stop();
-
 	exit(0);
 }
 
@@ -218,7 +244,7 @@ void IGA::help() {
 	cout << endl;
 	
 	cout << "INSTANCE LOAD" << endl;
-	cout << "Input: 'load instance <instance formatted string (lines separated by \\n)>'" << endl;
+	cout << "Input: 'load instance <a,b c,d e,f ... (optional 'EOF' to end entries)>'" << endl;
 
 	cout << endl;
 

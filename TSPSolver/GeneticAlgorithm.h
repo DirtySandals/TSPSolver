@@ -46,6 +46,7 @@ class GeneticAlgorithm {
 		void runAlgorithm(int maxGenerations);
 		virtual void runGeneration();
 	public:
+		std::atomic<bool> runningAlg;
 		GeneticAlgorithm();
 		~GeneticAlgorithm();
 		GeneticAlgorithm(TSPProblem& tspProblem, int populationSize, MutationOperator* mutator, CrossoverOperator* crossover, SelectionOperator* selector);
