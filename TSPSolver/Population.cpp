@@ -14,7 +14,8 @@ Population::~Population() {
 	population.shrink_to_fit();
 }
 
-Population::Population(vector<City> cities, int populationSize) : populationSize(populationSize), problem(cities) {
+Population::Population(vector<City> cities, int populationSize, StatTracker* stats) : populationSize(populationSize), problem(cities) {
+	this->stats = stats;
 	dimension = cities.size();
 
 	for (int i = 0; i < populationSize; i++) {
@@ -31,8 +32,9 @@ void Population::randomisePopulation() {
 }
 
 int Population::calculateAllFitness() {
-	bestFitnessIndex = 0;
-	bestFitness = numeric_limits<float>::max();
+	int bestFitnessIndex = 0;
+	float bestFitness = numeric_limits<float>::max();
+	float max = numeric_limits<float>::min();
 
 	for (int i = 0; i < populationSize; i++) {
 		float fitness = population[i].calculateFitness();
@@ -41,7 +43,12 @@ int Population::calculateAllFitness() {
 			bestFitness = fitness;
 			bestFitnessIndex = i;
 		}
+		if (fitness > max) {
+			max = fitness;
+		}
 	}
+
+	stats->update(population[bestFitnessIndex].route, bestFitness);
 
 	return bestFitnessIndex;
 }
@@ -73,8 +80,5 @@ void Population::addIndividual(Individual& ind, int index) {
 
 	population[index] = move(ind);
 
-	if (ind.fitness < bestFitness) {
-		bestFitness = ind.fitness;
-		bestFitnessIndex = index;
-	}
+	stats->update(ind.route, ind.fitness);
 }

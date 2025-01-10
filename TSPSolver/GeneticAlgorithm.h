@@ -40,7 +40,7 @@ class GeneticAlgorithm {
 		std::atomic<bool> cancelAlgorithm;
 		std::mutex algMutex;
 		std::condition_variable algStop;
-		static const int generationTolerance = 1000;
+		static const int generationTolerance = 10000;
 
 		void initProbabilities();
 		void runAlgorithm(int maxGenerations);

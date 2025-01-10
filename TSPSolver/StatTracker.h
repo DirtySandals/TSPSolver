@@ -16,6 +16,10 @@ struct StatTracker {
 	float bestFitness = numeric_limits<float>::max();
 	int bestGeneration = -1;
 
+	int currentGeneration = 0;
+	float currentBestFitness = numeric_limits<float>::max();
+	float currentWorstFitness = numeric_limits<float>::min();
+
 	StatTracker() {
 
 	}
@@ -28,14 +32,17 @@ struct StatTracker {
 		}
 	}
 
-	void update(vector<City>& route, float fitness, int generation) {
+	void update(vector<City>& route, float fitness) {
+		currentWorstFitness = max(fitness, currentWorstFitness);
+		currentBestFitness = min(fitness, currentBestFitness);
+
 		if (fitness >= bestFitness) {
 			return;
 		}
 
 		bestFitness = fitness;
 
-		bestGeneration = generation;
+		bestGeneration = currentGeneration;
 
 		cout << "bestroute: ";
 		for (int i = 0; i < bestRoute.size(); i++) {
@@ -45,6 +52,12 @@ struct StatTracker {
 			cout << to_string(bestRoute[i].index) << " ";
 		}
 		cout << endl;
+	}
+
+	void updateGen() {
+		currentGeneration++;
+		currentBestFitness = numeric_limits<float>::max();
+		currentWorstFitness = numeric_limits<float>::min();
 	}
 };
 

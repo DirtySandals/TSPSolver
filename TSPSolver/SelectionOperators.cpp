@@ -18,17 +18,24 @@ void SelectionOperator::copyPopulation(Population& population, Individual parent
 	}
 }
 
-FitnessProportionalSelection::FitnessProportionalSelection(int populationSize) {
-	for (int i = 0; i < populationSize; i++) {
-		fitnesses.push_back(0);
+void FitnessProportionalSelection::calculateWeightedFitness(Population& population) {
+	float worst = population.stats->currentWorstFitness;
+
+	for (int i = 0; i < population.populationSize; i++) {
+		float fitness = abs(population.population[i].fitness - worst);
+
+		fitnesses[i] = fitness;
 	}
+}
+
+FitnessProportionalSelection::FitnessProportionalSelection(int populationSize) {
+	fitnesses.resize(populationSize, 0);
 }
 
 void FitnessProportionalSelection::select(Population& population, Individual selectedIndividuals[]) {
 	copyPopulation(population, selectedIndividuals);
-	for (int i = 0; i < population.populationSize; i++) {
-		fitnesses[i] = 1.f / population.population[i].fitness;
-	}
+
+	calculateWeightedFitness(population);
 
 	weightDistribution(population.population, fitnesses, selectedIndividuals);
 }
@@ -87,8 +94,7 @@ void ElitismSelection::quickSort(Individual selectedIndividuals[], int start, in
 }
 
 void ElitismSelection::select(Population& population, Individual selectedIndividuals[]) {
+	numElites = static_cast<int>((float) population.populationSize * eliteProportion);
 	copyPopulation(population, selectedIndividuals);
-	/*cout << selectedIndividuals[20].toString() << endl;*/
 	quickSort(selectedIndividuals, 0, population.populationSize);
-	/*cout << selectedIndividuals[20].toString() << endl;*/
 }

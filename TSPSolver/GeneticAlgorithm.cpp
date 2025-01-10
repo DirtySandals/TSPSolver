@@ -1,12 +1,12 @@
 #include "GeneticAlgorithm.h"
 
-#include <iostream>
-#include <vector>
-#include <string>
 #include <algorithm>
-#include <random>
 #include <cmath>
-#include <fstream>
+#include <iostream>
+#include <random>
+#include <string>
+#include <typeinfo>
+#include <vector>
 
 using namespace std;
 
@@ -24,11 +24,10 @@ GeneticAlgorithm::~GeneticAlgorithm() {
 GeneticAlgorithm::GeneticAlgorithm(TSPProblem& tspProblem, int populationSize, MutationOperator* mutator, CrossoverOperator* crossover, SelectionOperator* selector) : problem(tspProblem.problem) {
 	this->populationSize = populationSize;
 	dimension = tspProblem.problem.size();
-	population = new Population(tspProblem.problem, populationSize);
+	stats = StatTracker(dimension);
+	population = new Population(tspProblem.problem, populationSize, &stats);
 	currSol.reserve(dimension);
 	order.reserve(dimension);
-
-	stats = StatTracker(dimension);
 
 	selectedPopulation = new Individual[populationSize];
 
@@ -88,10 +87,6 @@ void GeneticAlgorithm::runAlgorithm(int maxGenerations) {
 
 		runGeneration();
 
-		int bestFitnessIndex = population->bestFitnessIndex;
-		float bestFitness = population->bestFitness;
-		stats.update(population->population[bestFitnessIndex].route, bestFitness, generation);
-
 		generation++;
 	}
 
@@ -101,14 +96,28 @@ void GeneticAlgorithm::runAlgorithm(int maxGenerations) {
 void GeneticAlgorithm::runGeneration() {
 	selector->select(*population, selectedPopulation);
 
-	population->bestFitness = numeric_limits<float>::max();
+	int end = populationSize;
+
+	if (typeid(*selector) == typeid(ElitismSelection)) {
+		int numElites = dynamic_cast<ElitismSelection*>(selector)->numElites;
+		end = end - numElites;
+		for (int i = 0; i <= numElites; i++) {
+			population->addIndividual(selectedPopulation[i], i);
+		}
+	}
+
+	stats.updateGen();
+
 	random_device rd;
 	default_random_engine eng(rd());
 	uniform_real_distribution<float> distrFloat(0.0, 1.0);
 
-	for (int i = 0; i < populationSize; i += 2) {
-		if (i >= populationSize - 1) {
+	for (int i = 0; i < end; i += 2) {
+		if (i == end - 1) {
 			population->addIndividual(selectedPopulation[i], i);
+			break;
+		} else if (i > end - 1) {
+			break;
 		}
 
 		Individual first = selectedPopulation[i];

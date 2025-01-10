@@ -17,6 +17,8 @@ class SelectionOperator {
 class FitnessProportionalSelection : public SelectionOperator {
 	private:
 		std::vector<float> fitnesses;
+
+		void calculateWeightedFitness(Population& population);
 	public:
 		FitnessProportionalSelection(int populationSize);
 		void select(Population& population, Individual selectedIndividuals[]) override;
@@ -34,8 +36,11 @@ class TournamentSelection : public SelectionOperator {
 
 class ElitismSelection : public SelectionOperator {
 	private:
+		float eliteProportion = 0.2f;
 		void quickSort(Individual selectedIndividuals[], int start, int end);
 	public:
+		int numElites;
+
 		void select(Population& population, Individual selectedIndividuals[]) override;
 };
 

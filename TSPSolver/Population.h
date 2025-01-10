@@ -13,8 +13,7 @@
 
 class Population {
 	public:
-		int bestFitnessIndex = -1;
-		float bestFitness = std::numeric_limits<float>::max();
+		StatTracker* stats = nullptr;
 
 		std::vector<Individual> population;
 		std::vector<City> problem;
@@ -22,7 +21,7 @@ class Population {
 		int dimension;
 
 		Population();
-		Population(std::vector<City> cities, int populationSize);
+		Population(std::vector<City> cities, int populationSize, StatTracker* stats);
 		~Population();
 		void randomisePopulation();
 		int calculateAllFitness();
