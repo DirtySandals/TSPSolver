@@ -11,14 +11,21 @@ The TSPSolver folder houses a C++ implementation that solves the TSP problem usi
 
 <h3>Key Features of TSPSolver:</h3>
 
-- Genetic Algorithm: Utilizes genetic algorithm techniques to find optimal solutions for the TSP
-- Mutation Operators: Supports 4 different mutators
-* hi
-* yo
-* yeyeye
-- Crossover Operators: Offers 3 different crossover methods
-- Selection Operators: Provides 3 selection techniques
-- Inverover Algorithm: An additional option to employ the inverover algorithm for solving TSP
+- The TSPSolver employs a genetic algorithm find optimal solutions for the TSP
+- Mutation Operators:
+  - Insert Mutation
+  - Swap Mutation
+  - Inversion Mutation
+  - Scramble Mutation
+- Crossover Operators:
+  - Order Crossover
+  - PMX Crossover
+  - Cycle Crossover
+- Selection Operators:
+  - Fitness Proportional Selection
+  - Tournament Selection
+  - Elitism Selection
+- Inverover Algorithm: An additional algorithm from Guo Tao and Zbigniew Michalewicz for solving TSP
 
 <h3>Running TSPSolver:</h3>
 The solver can be run from the terminal by providing TSP instance files as input.
@@ -32,5 +39,3 @@ The TSPGUI folder contains a Python script built with Pygame that serves as a gr
 User-Friendly Interface: Allows users to interact visually with the TSP instance files and the TSPSolver.
 Real-Time Interaction: Provides real-time interaction with the genetic algorithm and visual feedback on the TSP solution process.
 Visual Display: Shows graphical visualizations of the TSP solution process and path optimization.
-<h3>Running TSPGUI:</h3>
-The TSPGUI can be executed via Python. Just navigate to the TSPGUI folder and run the script using python TSPGUI.py.
