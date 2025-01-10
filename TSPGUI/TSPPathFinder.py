@@ -1,7 +1,9 @@
 import os
 import glob
 
+# Search SolverApplication for all .txt files (all instances)
 def InstanceFinder():
+    # Join current directory with SolverApplication to ensure it exists
     current_directory = os.getcwd()
 
     folder_name = "SolverApplication"
@@ -11,7 +13,7 @@ def InstanceFinder():
     
     folder_path = os.path.join(current_directory, folder_name)
     instances_path = os.path.join(folder_path, "*.txt")
-
+    # Search all .txt instances and return them
     instances = []
     for instance in glob.glob(instances_path):
         instances.append(os.path.splitext(os.path.basename(instance))[0])
@@ -20,7 +22,8 @@ def InstanceFinder():
         return instances
     else:
         raise FileNotFoundError("No instance files found is /SolverApplication")
-        
+
+# Ensures TSPSolver.exe exists        
 def exeFinder():
     current_directory = os.getcwd()
 

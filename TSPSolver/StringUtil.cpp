@@ -9,6 +9,7 @@
 using namespace std;
 
 namespace StringUtil {
+	// Remove prefix and suffix of spaces
 	std::string StringUtil::trim(const std::string& str) {
 		size_t start = str.find_first_not_of(" \t\n\r\f\v");
 		size_t end = str.find_last_not_of(" \t\n\r\f\v");
@@ -18,11 +19,13 @@ namespace StringUtil {
 
 	std::string StringUtil::toLower(const std::string& str) {
 		std::string lowerStr = str;
+		// Use lambda function to convert each char to lowercase using standard tolower function
 		std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), [](unsigned char c) { return std::tolower(c); });
 		return lowerStr;
 	}
 
 	std::vector<std::string> split(std::string& str, char c) {
+		// Parse str and add to vector each time c is encountered
 		vector<string> lines;
 		string line = "";
 
@@ -34,7 +37,7 @@ namespace StringUtil {
 				line += str[i];
 			}
 		}
-
+		// If remaining line, push to vector
 		if (line.size() > 0) {
 			lines.push_back(line);
 		}
@@ -43,6 +46,7 @@ namespace StringUtil {
 	}
 
 	vector<string> StringUtil::splitString(string& str) {
+		// Parse str and add each word between spaces to vector
 		vector<string> words;
 		stringstream ss(str);
 		string word;

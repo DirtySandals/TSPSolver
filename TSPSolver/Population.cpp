@@ -10,18 +10,22 @@ Population::Population() {
 }
 
 Population::~Population() {
+	// Remove memory
 	population.clear();
 	population.shrink_to_fit();
 }
 
-Population::Population(vector<City> cities, int populationSize, StatTracker* stats) : populationSize(populationSize), problem(cities) {
+Population::Population(vector<City> cities, int populationSize, StatTracker* stats) : populationSize(populationSize) {
+	// Init variables
 	this->stats = stats;
 	dimension = cities.size();
-
+	// Init population
 	for (int i = 0; i < populationSize; i++) {
 		population.push_back(Individual(cities));
 	}
+	// Randomise population
 	randomisePopulation();
+	// Calculate all their fitnesses
 	calculateAllFitness();
 }
 
@@ -32,9 +36,9 @@ void Population::randomisePopulation() {
 }
 
 int Population::calculateAllFitness() {
+	// Initially calculate all fitnesses and track best fitness
 	int bestFitnessIndex = 0;
 	float bestFitness = numeric_limits<float>::max();
-	float max = numeric_limits<float>::min();
 
 	for (int i = 0; i < populationSize; i++) {
 		float fitness = population[i].calculateFitness();
@@ -43,21 +47,15 @@ int Population::calculateAllFitness() {
 			bestFitness = fitness;
 			bestFitnessIndex = i;
 		}
-		if (fitness > max) {
-			max = fitness;
-		}
 	}
-
+	// Initialise stats
 	stats->update(population[bestFitnessIndex].route, bestFitness);
 
 	return bestFitnessIndex;
 }
 
-size_t Population::size() {
-	return population.size();
-}
-
 std::string Population::fitnessesToString() {
+	// Create string of fitnesses of population for printing purposes
 	string output = "Fitnesses: { ";
 
 	for (int i = 0; i < populationSize; i++) {
@@ -77,8 +75,8 @@ void Population::addIndividual(Individual& ind, int index) {
 	if (index < 0 || index >= populationSize) {
 		throw out_of_range("Index: " + to_string(index) + " is out of population range");
 	}
-
+	// Add individual to population
 	population[index] = move(ind);
-
+	// Update stats to track fitnesses
 	stats->update(ind.route, ind.fitness);
 }

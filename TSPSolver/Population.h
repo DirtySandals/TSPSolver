@@ -11,23 +11,27 @@
 #include <limits>
 #include <vector>
 
+// Population abstracts all the solutions contained in the genetic algorithm
 class Population {
 	public:
-		StatTracker* stats = nullptr;
+		StatTracker* stats = nullptr; // Pointer to stats
 
-		std::vector<Individual> population;
-		std::vector<City> problem;
-		int populationSize;
-		int dimension;
+		std::vector<Individual> population; // Vector containing all solutions
+
+		int populationSize; // Number of solutions
+		int dimension; // Number of cities in problem
 
 		Population();
 		Population(std::vector<City> cities, int populationSize, StatTracker* stats);
 		~Population();
+		// Randomises all solutions' routes
 		void randomisePopulation();
+		// Initialises the fitness of all solutions
 		int calculateAllFitness();
+		// Used for inserting individual in population
 		void addIndividual(Individual& ind, int index);
+		// Returns string listing all fitnesses of population
 		std::string fitnessesToString();
-		size_t size();
 };
 
 #endif // !POPULATION_H

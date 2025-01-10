@@ -11,15 +11,17 @@
 
 using namespace std;
 
+// StatTracker is a struct which holds the meaningful stats of the genetic algorithm
 struct StatTracker {
-	vector<City> bestRoute;
-	float bestFitness = numeric_limits<float>::max();
-	int bestGeneration = -1;
-
+	vector<City> bestRoute; // Route with best fitness found globally
+	float bestFitness = numeric_limits<float>::max(); // Fitness associated with best route
+	int bestGeneration = -1; // Generation best route was found in
+	// Stats for current generation
 	int currentGeneration = 0;
 	float currentBestFitness = numeric_limits<float>::max();
 	float currentWorstFitness = numeric_limits<float>::min();
 
+	// Constructors
 	StatTracker() {
 
 	}
@@ -31,7 +33,7 @@ struct StatTracker {
 			bestRoute.push_back(City(-1, 0, 0));
 		}
 	}
-
+	// Updates stats
 	void update(vector<City>& route, float fitness) {
 		currentWorstFitness = max(fitness, currentWorstFitness);
 		currentBestFitness = min(fitness, currentBestFitness);
@@ -44,6 +46,7 @@ struct StatTracker {
 
 		bestGeneration = currentGeneration;
 
+		// Prints the best route when found
 		cout << "bestroute: ";
 		for (int i = 0; i < bestRoute.size(); i++) {
 			if (bestRoute[i].index != route[i].index) {
@@ -53,7 +56,7 @@ struct StatTracker {
 		}
 		cout << endl;
 	}
-
+	// Updates current generation variables by 'resetting' them
 	void updateGen() {
 		currentGeneration++;
 		currentBestFitness = numeric_limits<float>::max();
