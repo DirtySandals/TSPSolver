@@ -48,6 +48,9 @@ GeneticAlgorithm::GeneticAlgorithm(TSPProblem& tspProblem, int populationSize, M
 }
 
 void GeneticAlgorithm::startGA(int maxGenerations) {
+	if (dimension <= 3) {
+		return;
+	}
 	cancelAlgorithm.store(false);
 	runningAlg.store(true);
 
@@ -75,6 +78,7 @@ void GeneticAlgorithm::initProbabilities() {
 }
 
 void GeneticAlgorithm::runAlgorithm(int maxGenerations) {
+	cout << "Running Algorithm" << endl;
 	int generation = 0;
 	while (generation < maxGenerations && !cancelAlgorithm.load()) {
 		if (abs(generation - stats.bestGeneration) >= generationTolerance) {
@@ -84,7 +88,9 @@ void GeneticAlgorithm::runAlgorithm(int maxGenerations) {
 
 		runGeneration();
 
-		stats.update(population->population[bestFitnessIndex].route, population->population[bestFitnessIndex].fitness, generation);
+		int bestFitnessIndex = population->bestFitnessIndex;
+		float bestFitness = population->bestFitness;
+		stats.update(population->population[bestFitnessIndex].route, bestFitness, generation);
 
 		generation++;
 	}
@@ -93,17 +99,16 @@ void GeneticAlgorithm::runAlgorithm(int maxGenerations) {
 }
 
 void GeneticAlgorithm::runGeneration() {
-	bestFitnessIndex = population->calculateAllFitness();
-
 	selector->select(*population, selectedPopulation);
 
+	population->bestFitness = numeric_limits<float>::max();
 	random_device rd;
 	default_random_engine eng(rd());
 	uniform_real_distribution<float> distrFloat(0.0, 1.0);
 
 	for (int i = 0; i < populationSize; i += 2) {
 		if (i >= populationSize - 1) {
-			population->population[i] = selectedPopulation[i];
+			population->addIndividual(selectedPopulation[i], i);
 		}
 
 		Individual first = selectedPopulation[i];
@@ -120,22 +125,18 @@ void GeneticAlgorithm::runGeneration() {
 				mutator->mutate(secondChild);
 			}
 
-			firstChild.calculateFitness();
-			secondChild.calculateFitness();
-
-			population->population[i] = move(firstChild);
-			population->population[i + 1] = move(secondChild);
+			population->addIndividual(firstChild, i);
+			population->addIndividual(secondChild, i + 1);
 		} else {
 			if (distrFloat(eng) < pm) {
 				mutator->mutate(first);
-				first.calculateFitness();
-				population->population[i] = move(first);
 			}
 			if (distrFloat(eng) < pm) {
 				mutator->mutate(second);
-				second.calculateFitness();
-				population->population[i + 1] = move(second);
 			}
+
+			population->addIndividual(first, i);
+			population->addIndividual(second, i + 1);
 		}
 	}
 }

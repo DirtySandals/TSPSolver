@@ -8,10 +8,14 @@
 #include "TSPProblem.h"
 
 #include <string>
+#include <limits>
 #include <vector>
 
 class Population {
 	public:
+		int bestFitnessIndex = -1;
+		float bestFitness = std::numeric_limits<float>::max();
+
 		std::vector<Individual> population;
 		std::vector<City> problem;
 		int populationSize;
@@ -22,6 +26,7 @@ class Population {
 		~Population();
 		void randomisePopulation();
 		int calculateAllFitness();
+		void addIndividual(Individual& ind, int index);
 		std::string fitnessesToString();
 		size_t size();
 };

@@ -32,8 +32,6 @@ def exeFinder():
     folder_path = os.path.join(current_directory, folder_name)
     exe_path = os.path.join(folder_path, "TSPSolver.exe")
     
-    print(exe_path)
-    
     if os.path.isfile(exe_path):
         return exe_path
     else:

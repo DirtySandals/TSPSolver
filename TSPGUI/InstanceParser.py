@@ -27,3 +27,26 @@ def parse_instance(fileName):
     
     return coords
 
+def instance_scaler(points, center_x, center_y, width, height):
+    border_tolerance = 15
+    min_x = points[0][0]
+    max_x = points[0][0]
+    min_y = points[0][1]
+    max_y = points[0][1]
+    
+    for point in points:
+        min_x = min(min_x, point[0])
+        max_x = max(max_x, point[0])
+        min_y = min(min_y, point[1])
+        max_y = max(max_y, point[1])
+    
+    left = center_x - (width / 2) + border_tolerance
+    top = center_y - (height / 2) + border_tolerance
+
+    scale_x = (width - 2 * border_tolerance) / (max_x - min_x)
+    scale_y = (height - 2 * border_tolerance) / (max_y - min_y)
+
+    for i in range(len(points)):
+        points[i] = (left + (points[i][0] - min_x) * scale_x, top + (points[i][1] - min_y) * scale_y)        
+
+    return points

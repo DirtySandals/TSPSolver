@@ -111,16 +111,14 @@ void IGA::processLoad(std::string command) {
 	}
 
 	if (contains(command, "file")) {
-		cout << "loading file" << endl;
 		string fileName = getLabelledValue(command, "file", loadLabels);
 		fileName = "./" + fileName + ".txt";
 
 		tspProblem->parseFile(fileName);
-		cout << "loaded" << endl;
+
 		delete ga;
 		ga = nullptr;
 	} else if (contains(command, "instance")) {
-		cout << "loading instance" << endl;
 		string instance = getLabelledValue(command, "instance", loadLabels);
 
 		instance = trim(instance);
@@ -128,28 +126,27 @@ void IGA::processLoad(std::string command) {
 		vector<string> lines = splitString(instance);
 
 		tspProblem->parseCustomInstance(lines);
-		cout << "loaded" << endl;
+
 		delete ga;
 		ga = nullptr;
 	}
 }
 
 void IGA::processStart(std::string command) {
-	cout << 1 << endl;
 	if (ga != nullptr && ga->runningAlg.load()) {
 		throw runtime_error("genetic algorithm still running...");
 	}
-	cout << 2 << endl;
+
 	if (gaThread.joinable()) {
 		gaThread.join();
 		delete ga;
 	}
-	cout << 3 << endl;
+
 	if (tspProblem->dimension == 0) {
 		throw invalid_argument("problem has not been loaded");
 	}
-	cout << 4 << endl;
-	int maxGenerations = 20000;
+
+	int maxGenerations = std::numeric_limits<int>::max();
 	int populationSize = 50;
 
 	MutationOperator* mutator = nullptr;
@@ -165,7 +162,7 @@ void IGA::processStart(std::string command) {
 
 		maxGenerations = inputMaxGens;
 	}
-	cout << 5 << endl;
+
 	if (contains(command, "populationsize")) {
 		int inputPopSize = getLabelledValueInt(command, "populationsize", startLabels);
 
@@ -175,27 +172,27 @@ void IGA::processStart(std::string command) {
 
 		populationSize = inputPopSize;
 	}
-	cout << 6 << endl;
+
 	if (contains(command, "inverover")) {
 		ga = new InverOver(*tspProblem, populationSize);
 		gaThread = thread(&GeneticAlgorithm::startGA, ga, maxGenerations);
 		return;
 	}
-	cout << 7 << endl;
+
 	if (contains(command, "mutation")) {
 		string mutationInput = getLabelledValue(command, "mutation", startLabels);
 		mutator = selectMutation(mutationInput);
 	} else {
 		mutator = new InversionMutation();
 	}
-	cout << 8 << endl;
+
 	if (contains(command, "crossover")) {
 		string crossoverInput = getLabelledValue(command, "crossover", startLabels);
 		crossover = selectCrossover(crossoverInput, tspProblem->dimension);
 	} else {
 		crossover = new PMXCrossover(tspProblem->dimension);
 	}
-	cout << 9 << endl;
+
 	if (contains(command, "selection")) {
 		string selectionInput = getLabelledValue(command, "selection", startLabels);
 		selector = selectSelection(selectionInput, populationSize);
@@ -203,7 +200,6 @@ void IGA::processStart(std::string command) {
 		selector = new TournamentSelection(tournamentSize);
 	}
 
-	cout << "started" << endl;
 	ga = new GeneticAlgorithm(*tspProblem, populationSize, mutator, crossover, selector);
 	gaThread = thread(&GeneticAlgorithm::startGA, ga, maxGenerations);
 }
@@ -232,6 +228,7 @@ void IGA::help() {
 	cout << endl;
 	cout << "LOAD" << endl;
 	cout << "To use the program, you must first load an instance via file name or a custom instance input." << endl;
+	cout << "The instance must also have more than three entries to be considered" << endl;
 	cout << "FILE NAME LOAD:" << endl;
 	cout << "Input: 'load file <file_name>'" << endl;
 	cout << endl;
@@ -251,7 +248,7 @@ void IGA::help() {
 	cout << "START" << endl;
 	cout << "To start the genetic algorithm, you must have loaded an instance." << endl;
 	cout << "USING COMBINATION OF OPERATORS" << endl;
-	cout << "Input: 'start maxgenerations <value : default 20000> populationsize <value : default 50> mutation <value : default 'inversion'> crossover <value : default 'pmx'> selection <value : default 'tournament'>" << endl;
+	cout << "Input: 'start maxgenerations <value : default int_max> populationsize <value : default 50> mutation <value : default 'inversion'> crossover <value : default 'pmx'> selection <value : default 'tournament'>" << endl;
 	cout << "If an argument is not included its default value will be used." << endl;
 	cout << endl;
 	cout << "MUTATION OPERATORS" << endl;
@@ -264,7 +261,7 @@ void IGA::help() {
 	cout << "USE INVEROVER ALGORITHM" << endl;
 	cout << "Inver-over is an evolutionary algorithm from Guo Tao and Zbigniew Michalewicz which is based on simple inversion." << endl;
 	cout << "More can be found in their paper: 'Inver-over Operator for the TSP'." << endl;
-	cout << "Input: 'start inverover maxgenerations <value : default 20000> populationsize <value : default 50>'" << endl;
+	cout << "Input: 'start inverover maxgenerations <value : default int_max> populationsize <value : default 50>'" << endl;
 
 	cout << "STOP" << endl;
 	cout << "To stop the current genetic algorithm, type: 'stop'." << endl;

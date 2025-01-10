@@ -60,6 +60,11 @@ OrderCrossover::OrderCrossover(int dimension) : CrossoverOperator(dimension) {
 
 Individual OrderCrossover::crossover(Individual& indA, Individual& indB) {
 	resetChild();
+	if (indA.dimension <= 2) {
+		child.route = indA.route;
+		child.fitness = indA.fitness;
+		return child;
+	}
 
 	int samples[2];
 	sampleTwo(indA.dimension, samples);
@@ -85,6 +90,8 @@ Individual OrderCrossover::crossover(Individual& indA, Individual& indB) {
 		child.route[idx] = orderedCities[i];
 	}
 
+	child.calculateFitness();
+
 	return child;
 }
 
@@ -93,6 +100,11 @@ PMXCrossover::PMXCrossover(int dimension) : CrossoverOperator(dimension) {
 
 Individual PMXCrossover::crossover(Individual& indA, Individual& indB) {
 	resetChild();
+	if (indA.dimension <= 2) {
+		child.route = indA.route;
+		child.fitness = indA.fitness;
+		return child;
+	}
 
 	unordered_map<int, int> indexMapB;
 	set<int> sublistSet;
@@ -133,6 +145,8 @@ Individual PMXCrossover::crossover(Individual& indA, Individual& indB) {
 		}
 	}
 
+	child.calculateFitness();
+
 	return child;
 }
 
@@ -141,6 +155,11 @@ CycleCrossover::CycleCrossover(int dimension) : CrossoverOperator(dimension) {
 
 Individual CycleCrossover::crossover(Individual& indA, Individual& indB) {
 	resetChild();
+	if (indA.dimension <= 2) {
+		child.route = indA.route;
+		child.fitness = indA.fitness;
+		return child;
+	}
 
 	unordered_map<int, int> indexAMap;
 
@@ -179,6 +198,8 @@ Individual CycleCrossover::crossover(Individual& indA, Individual& indB) {
 
 		cycle += 1;
 	}
+
+	child.calculateFitness();
 
 	return child;
 }

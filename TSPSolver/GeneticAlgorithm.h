@@ -18,11 +18,11 @@
 
 class GeneticAlgorithm {
 	protected:
-		int bestFitnessIndex = 0;
 		StatTracker stats;
 
 		float pc = 0.f;
 		float pm = 0.f;
+
 		Population* population = nullptr;
 		int populationSize;
 		int dimension;
@@ -50,7 +50,7 @@ class GeneticAlgorithm {
 		GeneticAlgorithm();
 		~GeneticAlgorithm();
 		GeneticAlgorithm(TSPProblem& tspProblem, int populationSize, MutationOperator* mutator, CrossoverOperator* crossover, SelectionOperator* selector);
-		void startGA(int maxGenerations=20000);
+		void startGA(int maxGenerations=std::numeric_limits<int>::max());
 		void stop();
 };
 

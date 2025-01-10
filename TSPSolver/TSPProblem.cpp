@@ -14,20 +14,19 @@ TSPProblem::TSPProblem() {
 }
 
 void TSPProblem::parseFile(std::string filename) {
-	cout << 1 << endl;
 	ifstream file(filename);
 	try {
 		if (!file.is_open()) {
 			cout << "couldnt open" << endl;
 			throw std::runtime_error("instance file not found");
 		}
-		cout << 2 << endl;
+
 		string line;
 		vector<string> lines;
-		cout << 3 << endl;
+
 		while (getline(file, line))
 			lines.push_back(line);
-		cout << 4 << endl;
+
 		parseInstance(lines);
 
 		file.close();
@@ -38,7 +37,6 @@ void TSPProblem::parseFile(std::string filename) {
 }
 
 void TSPProblem::parseInstance(std::vector<std::string>& lines) {
-	cout << 2 << endl;
 	int end = lines.size();
 
 	if (lines.size() == 0) {
@@ -67,7 +65,7 @@ void TSPProblem::parseInstance(std::vector<std::string>& lines) {
 void TSPProblem::parseCustomInstance(std::vector<std::string>& lines) {
 	try {
 		int end = lines.size();
-
+		problem.clear();
 		if (lines.size() == 0) {
 			throw out_of_range("cannot load a problem of 0 entries");
 		}
@@ -104,7 +102,6 @@ void TSPProblem::parseCustomInstance(std::vector<std::string>& lines) {
 }
 
 void TSPProblem::readCoordinates(std::vector<std::string>& lines, int startIndex) {
-	cout << 3 << endl;
 	int end = lines.size();
 
 	if (end > 0) {

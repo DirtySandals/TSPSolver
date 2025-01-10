@@ -1,5 +1,7 @@
 #include "Population.h"
+
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -29,10 +31,10 @@ void Population::randomisePopulation() {
 }
 
 int Population::calculateAllFitness() {
-	int bestFitnessIndex = 0;
-	float bestFitness = population[0].fitness;
+	bestFitnessIndex = 0;
+	bestFitness = numeric_limits<float>::max();
 
-	for (int i = 1; i < populationSize; i++) {
+	for (int i = 0; i < populationSize; i++) {
 		float fitness = population[i].calculateFitness();
 
 		if (fitness < bestFitness) {
@@ -62,4 +64,17 @@ std::string Population::fitnessesToString() {
 	output += " }";
 
 	return output;
+}
+
+void Population::addIndividual(Individual& ind, int index) {
+	if (index < 0 || index >= populationSize) {
+		throw out_of_range("Index: " + to_string(index) + " is out of population range");
+	}
+
+	population[index] = move(ind);
+
+	if (ind.fitness < bestFitness) {
+		bestFitness = ind.fitness;
+		bestFitnessIndex = index;
+	}
 }

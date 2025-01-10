@@ -22,6 +22,8 @@ void InsertMutation::mutate(Individual& individual) {
 	individual.route.erase(individual.route.begin() + removeIndex);
 
 	individual.route.insert(individual.route.begin() + insertIndex, removedCity);
+
+	individual.calculateFitness();
 }
 
 void SwapMutation::mutate(Individual& individual) {
@@ -33,6 +35,8 @@ void SwapMutation::mutate(Individual& individual) {
 	sampleTwo(individual.dimension, samples);
 
 	swap(individual.route[samples[0]], individual.route[samples[1]]);
+
+	individual.calculateFitness();
 }
 
 void InversionMutation::mutate(Individual& individual) {
@@ -48,6 +52,8 @@ void InversionMutation::mutate(Individual& individual) {
 	}
 
 	reverse(individual.route.begin() + samples[0], individual.route.begin() + samples[1]);
+
+	individual.calculateFitness();
 }
 
 void ScrambleMutation::mutate(Individual& individual) {
@@ -63,4 +69,6 @@ void ScrambleMutation::mutate(Individual& individual) {
 	}
 
 	shuffleVector(individual.route, samples[0], samples[1]);
+
+	individual.calculateFitness();
 }

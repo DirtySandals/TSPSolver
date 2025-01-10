@@ -5,6 +5,7 @@ import select
 import subprocess
 import threading
 import os
+import time
 
 def points_to_instance(points):
     instance = ""
@@ -22,6 +23,7 @@ class TSPProcess:
         self.listener_thread = None
         self.best_route = []
         self.exe_path = exeFinder()
+        self.listening = False
         
         self.init_process()
     
@@ -35,14 +37,22 @@ class TSPProcess:
             text=True,
             cwd=exe_directory
         )
+
+        os.set_blocking(self.process.stdout.fileno(), False)
         
         self.listener_thread = threading.Thread(target=self.listen_to_stdout)
         self.listener_thread.start()
         
-    def __del__(self):
+    def cleanup(self):
         if self.process is not None:
+            self.stop()
+            self.listening = False
             self.listener_thread.join()
             self.process.terminate()
+            self.process = None
+            
+    def __del__(self):
+        self.cleanup()
     
     def parse_route(self, route):
         route = route.strip()
@@ -53,28 +63,36 @@ class TSPProcess:
         
         del route[0]
         
-        self.best_route = []
+        new_best_route = []
         
         for city in route:
-            self.best_route.append(city)
+            new_best_route.append(int(city))
+        
+        self.best_route = new_best_route
     
     def get_best_route(self):
         return self.best_route
     
     def listen_to_stdout(self):
-        while True:
-            output = self.process.stdout.readline()
+        self.listening = True
+        while self.listening:
+            try:
+                output = self.process.stdout.readline()
 
-            if output == "" and self.process is not None:
-                print("Process Terminated.")
-                break
+                if self.process.poll() is not None:
+                    print("Process Terminated.")
+                    break
             
-            if output:
-                print(f"Received: {output.strip()}")
-                self.parse_route(output.strip())
+                if output:
+                    print(f"Received: {output.strip()}")
+                    self.parse_route(output.strip())
+                else:
+                    time.sleep(0.01)      
+            except BlockingIOError:
+                print('err')
                 
     def write_to_process(self, message):
-        print(message)
+        print(f"Sending: {message}")
         self.process.stdin.write(f"{message}\r\n")
         self.process.stdin.flush()
     
@@ -84,12 +102,14 @@ class TSPProcess:
     def load_file(self, file):
         message = f"load file {file}"
         self.write_to_process(message)
+        self.best_route = []
         
     def load_instance(self, instance):
         formatted_instance = points_to_instance(instance)
-        print(formatted_instance)
         message = f"load instance {formatted_instance}"
+        
         self.write_to_process(message)
+        self.best_route = []
         
     def start_ga(self, inverover=False, max_generations=None, population_size=None, mutator=None, crossover=None, selector=None):
         message = "start "
@@ -113,6 +133,8 @@ class TSPProcess:
             
         if selector:
             message += f"selection {selector} "   
+
+        self.best_route = []
 
         self.write_to_process(message)
         

@@ -9,9 +9,11 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 struct StatTracker {
-	std::vector<City> bestRoute;
-	float bestFitness = std::numeric_limits<float>::max();
+	vector<City> bestRoute;
+	float bestFitness = numeric_limits<float>::max();
 	int bestGeneration = -1;
 
 	StatTracker() {
@@ -26,7 +28,7 @@ struct StatTracker {
 		}
 	}
 
-	void update(std::vector<City>& route, float fitness, int generation) {
+	void update(vector<City>& route, float fitness, int generation) {
 		if (fitness >= bestFitness) {
 			return;
 		}
@@ -35,14 +37,14 @@ struct StatTracker {
 
 		bestGeneration = generation;
 
-		std::cout << "bestroute: ";
+		cout << "bestroute: ";
 		for (int i = 0; i < bestRoute.size(); i++) {
 			if (bestRoute[i].index != route[i].index) {
-				bestRoute[i] = std::move(route[i]);
+				bestRoute[i] = move(route[i]);
 			}
-			std::cout << std::to_string(bestRoute[i].index) << " ";
+			cout << to_string(bestRoute[i].index) << " ";
 		}
-		std::cout << std::endl;
+		cout << endl;
 	}
 };
 
