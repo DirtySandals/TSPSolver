@@ -41,6 +41,7 @@ void InverOver::invert(size_t indexA, size_t indexB, std::vector<City>& solution
  * the individual is untouched
  */
 void InverOver::runGeneration() {
+	stats.updateGen();
 	// Init random distributions
 	random_device rd;
 	default_random_engine eng(rd());
@@ -108,6 +109,7 @@ void InverOver::runGeneration() {
 				population->population[k].route[i] = currSol[i];
 			}
 			population->population[k].fitness = currFitness;
+			stats.update(currSol, currFitness);
 		}
 	}
 

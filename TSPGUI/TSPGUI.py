@@ -105,6 +105,7 @@ def display_tsp(points, inverover, mutator, crossover, selector, pop_size):
                     process.stop()
                     process.start_ga(inverover, 20000, pop_size, mutator, crossover, selector)
         
+        clock.tick(60)
         pygame.display.update()
 # Allows user to choose genetic algorithm they want to use on their problem
 def configure_algorithm(points):
@@ -448,6 +449,7 @@ def configure_algorithm(points):
                     selected_selector = handle_option_click(selectors, mouse_pos, selected_selector)
                     selected_population_size = handle_option_click(population_sizes, mouse_pos, selected_population_size)
         
+        clock.tick(60)
         pygame.display.update()
 # Allows user to create an instance by clicking on screen
 def make_instance():
@@ -555,6 +557,7 @@ def make_instance():
                         process.load_instance(points)
                         configure_algorithm(points)
         
+        clock.tick(60)
         pygame.display.update()
 # Select preloaded instance files
 def select_instance():
@@ -615,6 +618,7 @@ def select_instance():
                         configure_algorithm(instance_coords)
                         break
         
+        clock.tick(60)
         pygame.display.update()
 # Main menu for application
 def main_menu():
@@ -686,6 +690,7 @@ def main_menu():
                 if quit_button.checkForInput(mouse_pos):
                     quit_gui()
         
+        clock.tick(60)
         pygame.display.update()
 
 # If main file, run application
