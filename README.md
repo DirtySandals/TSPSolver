@@ -13,6 +13,9 @@ The TSPSolver folder houses a C++ implementation that solves the TSP problem usi
 
 - Genetic Algorithm: Utilizes genetic algorithm techniques to find optimal solutions for the TSP
 - Mutation Operators: Supports 4 different mutators
+* hi
+* yo
+* yeyeye
 - Crossover Operators: Offers 3 different crossover methods
 - Selection Operators: Provides 3 selection techniques
 - Inverover Algorithm: An additional option to employ the inverover algorithm for solving TSP
