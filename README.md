@@ -9,11 +9,11 @@ This repository contains two main folders:
 The TSPSolver folder houses a C++ implementation that solves the TSP problem using a genetic algorithm. It accepts instance files and can be run via terminal/command line.
 
 <h3>Key Features of TSPSolver:</h3>
-- Genetic Algorithm: Utilizes genetic algorithm techniques to find optimal solutions for the TSP.
-- Mutation Operators: Supports 4 different mutators.
-- Crossover Operators: Offers 3 different crossover methods.
-- Selection Operators: Provides 3 selection techniques.
-- Inverover Algorithm: An additional option to employ the inverover algorithm for solving TSP.
+- Genetic Algorithm: Utilizes genetic algorithm techniques to find optimal solutions for the TSP
+- Mutation Operators: Supports 4 different mutators
+- Crossover Operators: Offers 3 different crossover methods
+- Selection Operators: Provides 3 selection techniques
+- Inverover Algorithm: An additional option to employ the inverover algorithm for solving TSP
 
 <h3>Running TSPSolver:</h3>
 The solver can be run from the terminal by providing TSP instance files as input.
