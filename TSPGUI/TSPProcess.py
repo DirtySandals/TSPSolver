@@ -1,11 +1,12 @@
 from TSPPathFinder import exeFinder
-import subprocess
-import threading
-import os
-import time
+from subprocess import Popen, PIPE
+from threading import Thread
+from os import getcwd, set_blocking
+from time import sleep
+from typing import List, Tuple
 
 # Converts array of tuples to eligible terminal command of entries
-def points_to_instance(points):
+def points_to_instance(points: List[Tuple[int, int]]) -> str:
     instance = ""
     
     for point in points:
@@ -29,37 +30,41 @@ class TSPProcess:
         self.listening = False
         
         self.init_process()
+        
     # Open the subprocess
-    def init_process(self):
+    def init_process(self) -> None:
         # Provide directory it will be working in
-        exe_directory = os.getcwd()
+        exe_directory = getcwd()
         # Open pipe to subprocess
-        self.process = subprocess.Popen(
+        self.process = Popen(
             [self.exe_path], 
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stdin=PIPE,
+            stdout=PIPE,
+            stderr=PIPE,
             text=True,
             cwd=exe_directory
         )
         # Set no blocking to eventually stop listening to process
-        os.set_blocking(self.process.stdout.fileno(), False)
+        set_blocking(self.process.stdout.fileno(), False)
         # Set up thread to continually listen to process
-        self.listener_thread = threading.Thread(target=self.listen_to_stdout)
+        self.listener_thread = Thread(target=self.listen_to_stdout)
         self.listener_thread.start()
+        
     # Cleanup listening thread and terminate process    
-    def cleanup(self):
+    def cleanup(self) -> None:
         if self.process is not None:
             self.stop()
             self.listening = False
             self.listener_thread.join()
             self.process.terminate()
             self.process = None
+            
     # Destructor cleans up            
     def __del__(self):
         self.cleanup()
+        
     # Parses best route given by process
-    def parse_route(self, route):
+    def parse_route(self, route: str) -> None:
         route = route.strip()
         route = route.split()
         
@@ -74,11 +79,13 @@ class TSPProcess:
             new_best_route.append(int(city))
         
         self.best_route = new_best_route
+        
     # Getter for best route
-    def get_best_route(self):
+    def get_best_route(self) -> List[int]:
         return self.best_route
+    
     # Listens to stdout continuallu
-    def listen_to_stdout(self):
+    def listen_to_stdout(self) -> None:
         self.listening = True
         # Listen until stoplistening
         while self.listening:
@@ -95,33 +102,37 @@ class TSPProcess:
                     self.parse_route(output.strip())
                 # If no response, sleep to avoid constant checking
                 else:
-                    time.sleep(0.01)      
+                    sleep(0.01)      
             # Handle BlockingIOError associated with non blocking readline                    
             except BlockingIOError:
                 print('err')
     
     # Writes message to process
-    def write_to_process(self, message):
+    def write_to_process(self, message: str) -> None:
         print(f"Sending: {message}")
         self.process.stdin.write(f"{message}\r\n")
         self.process.stdin.flush()
+        
     # Stops process' algorithm
-    def stop(self):
+    def stop(self) -> None:
         self.write_to_process("stop")
+        
     # Asks process to load file instance    
-    def load_file(self, file):
+    def load_file(self, file: str) -> None:
         message = f"load file {file}"
         self.write_to_process(message)
         self.best_route = []
+        
     # Asks process to load custom instance    
-    def load_instance(self, instance):
+    def load_instance(self, instance: List[Tuple[int, int]]) -> None:
         formatted_instance = points_to_instance(instance)
         message = f"load instance {formatted_instance}"
         
         self.write_to_process(message)
         self.best_route = []
+        
     # Asks process to start a genetic algorithm    
-    def start_ga(self, inverover=False, max_generations=None, population_size=None, mutator=None, crossover=None, selector=None):
+    def start_ga(self, inverover: bool, max_generations: int, population_size: str, mutator: str, crossover: str, selector: str) -> None:
         message = "start "
         # Pass on arguments
         if inverover:

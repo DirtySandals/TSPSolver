@@ -1,5 +1,7 @@
+from typing import List, Tuple
+
 # Reads coordinates from instance file
-def read_coordinates(file_lines):
+def read_coordinates(file_lines: List[str]) -> List[Tuple[int, int]]:
     coords = []
     # For each line, split numbers and enumerate into coordinate
     for line in file_lines:
@@ -13,7 +15,7 @@ def read_coordinates(file_lines):
     return coords
 
 # Parses instance file
-def parse_instance(fileName):
+def parse_instance(fileName: str) -> List[Tuple[int, int]]:
     coords = None
     # Open file
     with open(fileName, 'r') as file:
@@ -28,8 +30,9 @@ def parse_instance(fileName):
                 break
     
     return coords
+
 # Scales the points found from instance files to fit in screen
-def instance_scaler(points, center_x, center_y, width, height):
+def instance_scaler(points: List[Tuple[int, int]], center_x: int, center_y: int, width: int, height: int) -> List[Tuple[int, int]]:
     border_tolerance = 15 # Pixels from edge of graph
     min_x = points[0][0]
     max_x = points[0][0]

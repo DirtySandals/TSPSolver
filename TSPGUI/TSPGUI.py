@@ -1,11 +1,13 @@
 import pygame
 import sys
-import numpy as np
+from numpy import add
 from enum import Enum
+from typing import List, Tuple
 from TSPProcess import TSPProcess
 from Button import Button
 from TSPPathFinder import InstanceFinder
 from InstanceParser import parse_instance, instance_scaler
+
 # Find all instances in folder
 instances = InstanceFinder()
 # Startup process
@@ -45,13 +47,15 @@ graph_color = (255, 255, 255)
 graph = pygame.Rect(graph_center_x - graph_width // 2, graph_center_y - graph_height // 2, graph_width, graph_height)
 
 # Quit function to exit game gracefully
-def quit_gui():
+def quit_gui() -> None:
     global process
     process.cleanup()
     pygame.quit()
     sys.exit()
+    
 # Displays screen for showing algorithm work    
-def display_tsp(points, inverover, mutator, crossover, selector, pop_size):
+def display_tsp(points: List[Tuple[int, int]], inverover: bool, mutator: str, crossover: str, 
+                selector: str, pop_size: str) -> None:
     start_button = Button(
             image=None,
             pos=(WIDTH // 2, HEIGHT * 6 // 7),
@@ -107,8 +111,9 @@ def display_tsp(points, inverover, mutator, crossover, selector, pop_size):
         
         clock.tick(60)
         pygame.display.update()
+        
 # Allows user to choose genetic algorithm they want to use on their problem
-def configure_algorithm(points):
+def configure_algorithm(points: List[Tuple[int, int]]) -> None:
     # Handle clicking on button
     def handle_option_click(options, mouse_pos, current_value):
         for option in options:
@@ -146,7 +151,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[0], (0, subtitle_option_separation))),
+                        pos=tuple(add(option_cell[0], (0, subtitle_option_separation))),
                         text_input="Inversion",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -157,7 +162,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[0], (0, subtitle_option_separation + 24))),
+                        pos=tuple(add(option_cell[0], (0, subtitle_option_separation + 24))),
                         text_input="Insert",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -168,7 +173,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[0], (0, subtitle_option_separation + 24 * 2))),
+                        pos=tuple(add(option_cell[0], (0, subtitle_option_separation + 24 * 2))),
                         text_input="Swap",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -179,7 +184,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[0], (0, subtitle_option_separation + 24 * 3))),
+                        pos=tuple(add(option_cell[0], (0, subtitle_option_separation + 24 * 3))),
                         text_input="Scramble",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -193,7 +198,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[1], (0, subtitle_option_separation))),
+                        pos=tuple(add(option_cell[1], (0, subtitle_option_separation))),
                         text_input="PMX",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -204,7 +209,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[1], (0, subtitle_option_separation + 24))),
+                        pos=tuple(add(option_cell[1], (0, subtitle_option_separation + 24))),
                         text_input="Order",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -215,7 +220,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[1], (0, subtitle_option_separation + 24 * 2))),
+                        pos=tuple(add(option_cell[1], (0, subtitle_option_separation + 24 * 2))),
                         text_input="Cycle",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -229,7 +234,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[2], (0, subtitle_option_separation))),
+                        pos=tuple(add(option_cell[2], (0, subtitle_option_separation))),
                         text_input="Tournament",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -240,7 +245,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[2], (0, subtitle_option_separation + 24))),
+                        pos=tuple(add(option_cell[2], (0, subtitle_option_separation + 24))),
                         text_input="Fitness Proportional",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -251,7 +256,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[2], (0, subtitle_option_separation + 24 * 2))),
+                        pos=tuple(add(option_cell[2], (0, subtitle_option_separation + 24 * 2))),
                         text_input="Elitism",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -265,7 +270,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[3], (0, subtitle_option_separation))),
+                        pos=tuple(add(option_cell[3], (0, subtitle_option_separation))),
                         text_input="25",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -276,7 +281,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[3], (0, subtitle_option_separation + 24))),
+                        pos=tuple(add(option_cell[3], (0, subtitle_option_separation + 24))),
                         text_input="50",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -287,7 +292,7 @@ def configure_algorithm(points):
         {
             "button": Button(
                         image=None,
-                        pos=tuple(np.add(option_cell[3], (0, subtitle_option_separation + 24 * 2))),
+                        pos=tuple(add(option_cell[3], (0, subtitle_option_separation + 24 * 2))),
                         text_input="100",
                         font=option_font,
                         base_color=(0, 0, 0),
@@ -451,8 +456,9 @@ def configure_algorithm(points):
         
         clock.tick(60)
         pygame.display.update()
+        
 # Allows user to create an instance by clicking on screen
-def make_instance():
+def make_instance() -> None:
     # Points for problem
     points = []
     max_points = 50
@@ -528,8 +534,7 @@ def make_instance():
         for event in pygame.event.get():
             # Quit game
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                quit_gui()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Back button
                 if back_button.checkForInput(mouse_pos):
@@ -559,8 +564,9 @@ def make_instance():
         
         clock.tick(60)
         pygame.display.update()
+        
 # Select preloaded instance files
-def select_instance():
+def select_instance() -> None:
     # Title and buttons
     title_font = pygame.font.Font(font_path, 32)
     menu_title = title_font.render("Select An Instance", True, (0, 0, 0), None)
@@ -620,8 +626,9 @@ def select_instance():
         
         clock.tick(60)
         pygame.display.update()
+        
 # Main menu for application
-def main_menu():
+def main_menu() -> None:
     # Init buttons
     button_font = pygame.font.Font(font_path, 24)
     
