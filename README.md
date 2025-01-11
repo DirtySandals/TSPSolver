@@ -39,3 +39,18 @@ The TSPGUI folder contains a Python script built with Pygame that serves as a gr
 User-Friendly Interface: Allows users to interact visually with the TSP instance files and the TSPSolver.
 Real-Time Interaction: Provides real-time interaction with the genetic algorithm and visual feedback on the TSP solution process.
 Visual Display: Shows graphical visualizations of the TSP solution process and path optimization.
+
+<h2>Running TSPGUI</h2>
+To run the TSPGUI, first install the required dependencies with:
+```
+pip install -r requirements.txt
+```
+Next, the GUI needs a compile executable to run as a subprocess.
+<h3>TSPSolver Executable</h3>
+You can either download the executable binary in this repo's latest release, or compile the executable yourself.
+Once you have the executable, place it in folder TSPGUI/SolverApplication/ (You will need to create this directory).
+
+Finally run the script with:
+```
+python TSPGUI.py
+```
