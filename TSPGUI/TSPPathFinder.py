@@ -6,7 +6,7 @@ def InstanceFinder():
     # Join current directory with SolverApplication to ensure it exists
     current_directory = os.getcwd()
 
-    folder_name = "SolverApplication"
+    folder_name = "./../Instances"
 
     if not os.path.isdir(os.path.join(current_directory, folder_name)):
         raise NotADirectoryError("SolverApplication folder not found")

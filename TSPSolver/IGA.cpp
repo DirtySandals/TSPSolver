@@ -11,7 +11,7 @@ using namespace std;
 using namespace StringUtil;
 
 // Initialise static const vectors and strings
-const vector<string> IGA::fileNames = { "a280", "eil51", "eil76", "eil101", "kroA100", "kroC100", "lin105", "pcb442", "pr2392", "st70", "usa13509" };
+const vector<string> IGA::fileNames = { "a280", "eil51", "eil76", "eil101", "kroA100", "kroC100", "lin105", "pcb442" };
 const vector<string> IGA::loadLabels = { "load", "file", "instance" };
 const vector<string> IGA::startLabels = { "start", "maxgenerations", "populationsize", "mutation", "crossover", "selection" };
 const string IGA::author = "Aleksander Gayko";
@@ -120,7 +120,7 @@ void IGA::processLoad(std::string command) {
 	// Load instance from file
 	if (contains(command, "file")) {
 		string fileName = getLabelledValue(command, "file", loadLabels);
-		fileName = "./" + fileName + ".txt";
+		fileName = "./../Instances/" + fileName + ".txt";
 		// Create problem
 		tspProblem->parseFile(fileName);
 		// Delete genetic algorithm in case

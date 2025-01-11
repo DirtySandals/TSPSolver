@@ -32,7 +32,7 @@ class TSPProcess:
     # Open the subprocess
     def init_process(self):
         # Provide directory it will be working in
-        exe_directory = os.path.join(os.getcwd(), "SolverApplication")
+        exe_directory = os.getcwd()
         # Open pipe to subprocess
         self.process = subprocess.Popen(
             [self.exe_path], 

@@ -1,9 +1,7 @@
 import pygame
 import sys
-import threading
 import numpy as np
 from enum import Enum
-from tkinter.font import Font
 from TSPProcess import TSPProcess
 from Button import Button
 from TSPPathFinder import InstanceFinder
@@ -24,11 +22,13 @@ background = (81, 213, 224)
 
 clock = pygame.time.Clock()
 
+font_path = "./Assets/font.ttf"
+
 back_button = Button(
             image=None,
             pos=(WIDTH // 10, HEIGHT // 10),
             text_input="Back",
-            font=pygame.font.Font("./font.ttf", 16),
+            font=pygame.font.Font(font_path, 16),
             base_color=(0, 0, 0),
             hovering_color="White"
 )
@@ -56,7 +56,7 @@ def display_tsp(points, inverover, mutator, crossover, selector, pop_size):
             image=None,
             pos=(WIDTH // 2, HEIGHT * 6 // 7),
             text_input="Start Algorithm",
-            font=pygame.font.Font("./font.ttf", 24),
+            font=pygame.font.Font(font_path, 24),
             base_color=(0, 0, 0),
             hovering_color="White"
     )
@@ -140,7 +140,7 @@ def configure_algorithm(points):
     # Intialise options
     subtitle_option_separation = 32
     
-    option_font = pygame.font.Font("./font.ttf", 16)
+    option_font = pygame.font.Font(font_path, 16)
 
     mutators = [
         {
@@ -298,12 +298,12 @@ def configure_algorithm(points):
     ]
 
     # Title of page
-    select_font = pygame.font.Font("./font.ttf", 38)
+    select_font = pygame.font.Font(font_path, 38)
     select_text = select_font.render("Select Algorithm", True, (0, 0, 0), None)
     select_rect = select_text.get_rect(center=(WIDTH // 2, WIDTH // 4))
 
     # Algorithm choice buttons
-    alg_choice_font = pygame.font.Font("./font.ttf", 24)
+    alg_choice_font = pygame.font.Font(font_path, 24)
 
     inverover_button = Button(
             image=None,
@@ -328,7 +328,7 @@ def configure_algorithm(points):
             image=None,
             pos=(WIDTH // 2, HEIGHT * 6 // 7),
             text_input="Next",
-            font=pygame.font.Font("./font.ttf", 24),
+            font=pygame.font.Font(font_path, 24),
             base_color=(0, 0, 0),
             hovering_color="White"
     )
@@ -355,13 +355,13 @@ def configure_algorithm(points):
             custom_button.update(screen)
         # Display custom algorithm options   
         elif selected_algorithm is AlgorithmType.Custom:
-            custom_font = pygame.font.Font("./font.ttf", 32)
+            custom_font = pygame.font.Font(font_path, 32)
             custom_title = custom_font.render("Custom Algorithm", True, (0, 0, 0), None)
             custom_rect = custom_title.get_rect(center=(WIDTH // 2, HEIGHT // 6))
 
             screen.blit(custom_title, custom_rect)
             
-            subtitle_font = pygame.font.Font("./font.ttf", 20)
+            subtitle_font = pygame.font.Font(font_path, 20)
             
             mutator_text = subtitle_font.render("Mutator", True, (0, 0, 0), None)
             mutator_rect = mutator_text.get_rect(center=option_cell[0])
@@ -462,7 +462,7 @@ def make_instance():
         image=None,
         pos=(535, 100),
         text_input="Remove Last Entry",
-        font=pygame.font.Font("./font.ttf", 12),
+        font=pygame.font.Font(font_path, 12),
         base_color=(0, 0, 0),
         hovering_color="White"
     )
@@ -471,14 +471,14 @@ def make_instance():
         image=None,
         pos=(WIDTH // 2, HEIGHT - 60),
         text_input="Solve Problem",
-        font=pygame.font.Font("./font.ttf", 24),
+        font=pygame.font.Font(font_path, 24),
         base_color=(0, 0, 0),
         hovering_color="White"
     )
     # Warnings to display
     show_three_warning = False
     show_remove_warning = False
-    warning_font = pygame.font.Font("./font.ttf", 12)
+    warning_font = pygame.font.Font(font_path, 12)
     warning_pos = (WIDTH // 2, HEIGHT - 100)
     warning_color = (255, 0, 0)
     
@@ -562,11 +562,11 @@ def make_instance():
 # Select preloaded instance files
 def select_instance():
     # Title and buttons
-    title_font = pygame.font.Font("./font.ttf", 32)
+    title_font = pygame.font.Font(font_path, 32)
     menu_title = title_font.render("Select An Instance", True, (0, 0, 0), None)
     menu_title_rect = menu_title.get_rect(center=(WIDTH // 2, HEIGHT // 5))
     
-    button_font = pygame.font.Font("./font.ttf", 22)
+    button_font = pygame.font.Font(font_path, 22)
     buttons = []
     button_start_height = menu_title_rect.centery + 60
     button_gap = button_font.get_height() * 1.5
@@ -609,7 +609,7 @@ def select_instance():
                         # Load file on process
                         process.load_file(button.text_input)
                         # Path to instance
-                        path = f"./SolverApplication/{button.text_input}.txt"
+                        path = f"./../Instances/{button.text_input}.txt"
                         # Retrieve coords from file
                         instance_coords = parse_instance(path)
                         # Scale coords to fit on screen
@@ -623,7 +623,7 @@ def select_instance():
 # Main menu for application
 def main_menu():
     # Init buttons
-    button_font = pygame.font.Font("./font.ttf", 24)
+    button_font = pygame.font.Font(font_path, 24)
     
     file_instance_button = Button(
         image=None,
@@ -647,7 +647,7 @@ def main_menu():
             image=None,
             pos=(WIDTH // 10, HEIGHT // 10),
             text_input="Quit",
-            font=pygame.font.Font("./font.ttf", 16),
+            font=pygame.font.Font(font_path, 16),
             base_color=(0, 0, 0),
             hovering_color="White"
     )
@@ -660,7 +660,7 @@ def main_menu():
         quit_button.changeColor(mouse_pos)
         quit_button.update(screen)
         # Display title
-        title_font = pygame.font.Font("./font.ttf", 42)
+        title_font = pygame.font.Font(font_path, 42)
         menu_title_1 = title_font.render("Genetic Algorithm", True, (0, 0, 0), None)
         menu_title_rect_1 = menu_title_1.get_rect(center=(WIDTH // 2, HEIGHT // 4))
         
