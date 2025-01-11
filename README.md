@@ -42,9 +42,11 @@ Visual Display: Shows graphical visualizations of the TSP solution process and p
 
 <h2>Running TSPGUI</h2>
 To run the TSPGUI, first install the required dependencies with:
+
 ```
 pip install -r requirements.txt
 ```
+
 Next, the GUI needs a compile executable to run as a subprocess.
 <h3>TSPSolver Executable</h3>
 You can either download the executable binary in this repo's latest release, or compile the executable yourself.
