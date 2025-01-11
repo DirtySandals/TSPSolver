@@ -50,6 +50,12 @@ pip install -r requirements.txt
 Next, the GUI needs a compile executable to run as a subprocess.
 <h3>TSPSolver Executable</h3>
 You can either download the executable binary in this repo's latest release, or compile the executable yourself.
+Compile TSPSolver:
+
+```
+g++ -std=c++20 -o TSPSolver.exe TSPSolver/*.h TSPSolver/*.cpp
+```
+
 Once you have the executable, place it in folder TSPGUI/SolverApplication/ (You will need to create this directory).
 
 Finally run the script with:
